@@ -1,4 +1,5 @@
 <?php
+include_once "ConexionDB.php";
 class Programa
 {
     private $nombre;
@@ -26,7 +27,7 @@ class Programa
 
     public function verProgramas() {
         try {
-            $db = new db();
+            $db = new ConexionDB();
             $conn = $db->abrirConexion();
 
             $sql = "SELECT * FROM pa";
@@ -38,6 +39,24 @@ class Programa
             return $result;
         }
         catch (PDOException $e){
+            echo $e->getMessage();
+        }
+    }
+
+    public function guardar(): int{
+        try {
+            $db = new ConexionDB();
+            $conn = $db->abrirConexion();
+
+            $sql = "INSERT INTO pa(nombre,id_facultad) 
+                    VALUES('$this->nombre', 1)";
+            $respuesta = $conn->prepare($sql);
+            $respuesta->execute();
+
+            $db->cerrarConexion();
+
+            return $respuesta->rowCount();
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
